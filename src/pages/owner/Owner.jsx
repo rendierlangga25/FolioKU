@@ -8,6 +8,7 @@ const Page=({t,children})=><div><h1 className="font-display mb-6 text-2xl font-s
 const Tag=({s})=>{const m={paid:'bg-emerald-50 text-emerald-700',pending:'bg-amber-50 text-amber-700',review:'bg-blue-50 text-blue-700',rejected:'bg-red-50 text-red-700'};return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${m[s]||'bg-neutral-100 text-neutral-600'}`}>{s}</span>}
 
 export {default as Overview} from './Overview'
+export {default as Feedback} from './Feedback'
 export const Plans=()=><Page t="Paket & Harga"><p className="-mt-3 text-sm text-neutral-500">Atur nama, lama aktif, dan harga paket di sini. Perubahan langsung tampil di landing page dan halaman langganan. Kosongkan "Lama aktif" untuk paket Lifetime.</p>
   <Manager owned={false} table="plans" title="Paket" fields={F.plan} primary="name" sub={r=>`${rp(r.price)} · ${dur(r)}${r.active?'':' · NONAKTIF'}`}/></Page>
 export const Methods=()=><Page t="Metode Pembayaran"><p className="-mt-3 text-sm text-neutral-500">Tambah akun QRIS, e-wallet, dan bank milikmu. Yang <b>Aktif</b> akan tampil di halaman pembayaran pelanggan dan di landing page. Untuk QRIS, upload gambar QRIS dari aplikasi GoPay Merchant atau bank kamu.</p><Manager owned={false} table="payment_methods" title="Metode" fields={F.paymethod} primary="label" thumb="image_url" sub={r=>`${{qris:'QRIS',ewallet:'E-Wallet',bank:'Bank'}[r.type]||r.type}${r.account_number?' · '+r.account_number:''}${r.active?'':' · NONAKTIF'}`}/></Page>

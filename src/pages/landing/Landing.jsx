@@ -6,6 +6,7 @@ import Reveal from '../../components/public/Reveal'
 import PlanCard from '../../components/shared/PlanCard'
 import PayMethods from '../../components/shared/PayMethods'
 import MiniSite from './MiniSite'
+import Feedback from './Feedback'
 import { usePlans } from '../../lib/plans'
 import { useAccount } from '../../lib/account'
 import { waLink } from '../../lib/format'
@@ -550,6 +551,8 @@ export default function Landing() {
       </section>
 
 
+      <Feedback />
+
       {/* CTA */}
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-6xl rounded-[2.5rem] bg-[#e2561b] p-10 text-center text-white md:p-16">
@@ -600,6 +603,10 @@ export default function Landing() {
             <Link to="/privasi" className="hover:text-black">
               Privasi
             </Link>
+
+            <a href="#masukan" className="hover:text-black">
+              Saran & Masukan
+            </a>
 
             {wa &&
               <a

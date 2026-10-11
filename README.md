@@ -12,7 +12,8 @@
 2. `update-2.sql` (hanya jika belum pernah)
 3. `update-3-saas.sql`
 4. `update-4-pembayaran-manual.sql`
-5. **`update-5-balas-pesan-dan-ringkasan.sql`** (baru: balas pesan + grafik Ringkasan Owner)
+5. `update-5-balas-pesan-dan-ringkasan.sql`
+6. **`update-6-masukan.sql`** (baru: tabel Saran & Masukan dari landing page)
 
 Authentication > Providers > Email: pastikan **Allow new users to sign up** AKTIF.
 Authentication > URL Configuration: isi **Site URL** dengan domain websitemu (contoh `https://portofolio-vif8.vercel.app`) dan tambahkan `https://portofolio-vif8.vercel.app/**` di **Redirect URLs**. Jika tidak, link konfirmasi email akan mengarah ke `localhost:3000`.

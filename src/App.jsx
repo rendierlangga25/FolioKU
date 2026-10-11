@@ -6,6 +6,7 @@ import SignIn from './pages/auth/SignIn.jsx'
 import SignUp from './pages/auth/SignUp.jsx'
 import Reset from './pages/auth/Reset.jsx'
 import Public,{Demo} from './pages/public/Public.jsx'
+import QrRedirect from './pages/public/QrRedirect.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
 import Messages from './pages/admin/Messages.jsx'
 import * as P from './pages/admin/Pages.jsx'
@@ -34,7 +35,7 @@ export default function App(){return(
 <Route path="/" element={<Landing/>}/>
 <Route path="/masuk" element={<SignIn/>}/><Route path="/daftar" element={<SignUp/>}/><Route path="/reset" element={<Reset/>}/>
 <Route path="/syarat" element={<Legal kind="syarat"/>}/><Route path="/privasi" element={<Legal kind="privasi"/>}/>
-<Route path="/demo" element={<Demo/>}/><Route path="/u/:username" element={<Public/>}/>
+<Route path="/demo" element={<Demo/>}/><Route path="/u/:username" element={<Public/>}/><Route path="/q/:id" element={<QrRedirect/>}/>
 <Route path="/app" element={<Guard><AppLayout/></Guard>}>
 <Route index element={<Dashboard/>}/><Route path="billing" element={<Billing/>}/>
 <Route path="profile" element={<P.Profile/>}/><Route path="about" element={<P.About/>}/>
@@ -44,7 +45,7 @@ export default function App(){return(
 <Route path="settings" element={<P.Settings/>}/><Route path="messages" element={<Messages/>}/>
 </Route>
 <Route path="/owner" element={<OwnerGuard><AppLayout owner/></OwnerGuard>}>
-<Route index element={<O.Overview/>}/><Route path="plans" element={<O.Plans/>}/><Route path="orders" element={<O.Orders/>}/><Route path="methods" element={<O.Methods/>}/><Route path="users" element={<O.Users/>}/><Route path="settings" element={<O.AppSettings/>}/>
+<Route index element={<O.Overview/>}/><Route path="plans" element={<O.Plans/>}/><Route path="orders" element={<O.Orders/>}/><Route path="methods" element={<O.Methods/>}/><Route path="users" element={<O.Users/>}/><Route path="settings" element={<O.AppSettings/>}/><Route path="feedback" element={<O.Feedback/>}/>
 </Route>
 <Route path="/admin/*" element={<Navigate to="/app" replace/>}/>
 <Route path="*" element={<Navigate to="/" replace/>}/>

@@ -1,8 +1,10 @@
 import {useEffect,useRef,useState} from 'react'
 import {AnimatePresence,motion,useScroll,useTransform} from 'framer-motion'
-import {ArrowUpRight,Award,Briefcase,Download,ExternalLink,Github,GraduationCap,Instagram,Linkedin,Mail,MapPin,MessageCircle,Target,X} from 'lucide-react'
+import {ArrowUpRight,Award,Briefcase,Download,ExternalLink,FileText,Github,GraduationCap,Instagram,Linkedin,Mail,MapPin,MessageCircle,Target,X} from 'lucide-react'
 import Reveal from './Reveal'
 import {sb} from '../../lib/supabase'
+import PdfView from './PdfView'
+import {isPdf} from '../../lib/files'
 
 export const Section=({id,kicker,title,children})=>(
   <section id={id} className="scroll-mt-16 py-24"><div className="mx-auto max-w-6xl px-5">
@@ -77,7 +79,7 @@ function Lightbox({src,onClose}){
     <button aria-label="Close" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-[#ffffff26] text-[#fff]"><X size={20}/></button>
     <motion.img initial={{scale:.96}} animate={{scale:1}} src={src} alt="" className="max-h-[92vh] max-w-[96vw] rounded-lg object-contain"/></motion.div>
 }
-function Detail({kicker,title,meta,desc,images,links,onClose}){
+function Detail({kicker,title,meta,desc,images,links,pdf,onClose}){
   const [zoom,setZoom]=useState(null),tap=useRef(0)
   useEffect(()=>{const f=e=>{if(e.key==='Escape')zoom?setZoom(null):onClose()};addEventListener('keydown',f);return()=>removeEventListener('keydown',f)},[zoom])
   const hit=u=>{const n=Date.now();if(n-tap.current<400)setZoom(u);tap.current=n}
@@ -87,6 +89,7 @@ function Detail({kicker,title,meta,desc,images,links,onClose}){
       <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wider text-[var(--ac)]">{kicker}{meta&&<span className="font-normal normal-case text-[var(--tx)]/45"> · {meta}</span>}</p><h3 className="font-display mt-1 text-2xl font-semibold">{title}</h3></div><button onClick={onClose} aria-label="Close" className="grid h-9 w-9 flex-none place-items-center rounded-full bg-[var(--bg)]"><X size={18}/></button></div>
       {desc&&<p className="mt-4 whitespace-pre-line text-[var(--tx)]/70">{desc}</p>}
       {images.length>0&&<><div className="mt-5 grid gap-3 sm:grid-cols-2">{images.map((u,i)=><img key={i} src={u} alt="" onClick={()=>hit(u)} className="w-full cursor-zoom-in select-none rounded-2xl border border-[var(--tx)]/10 object-cover"/>)}</div><p className="mt-3 text-xs text-[var(--tx)]/45">Double-click an image to enlarge it.</p></>}
+      {pdf&&<div className="mt-5"><PdfView url={pdf} title={title}/></div>}
       {links.length>0&&<div className="mt-6 flex flex-wrap gap-3">{links.map((k,i)=><a key={k.l} href={k.h} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium ${i?'border border-[var(--tx)]/20':'bg-[var(--dk)] text-[var(--dkt)]'}`}><k.I size={15}/>{k.l}</a>)}</div>}
     </motion.div>
     <AnimatePresence>{zoom&&<Lightbox src={zoom} onClose={()=>setZoom(null)}/>}</AnimatePresence>
@@ -117,10 +120,10 @@ export function Certificates({items}){
   <Section id="certificates" kicker="Certifications" title="Certificates & training">
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">{items.map((c,i)=>
       <Reveal key={c.id} delay={(i%3)*.07} className="h-full"><motion.article whileHover={{y:-6}} onClick={()=>setOpen(c)} className="group h-full cursor-pointer overflow-hidden rounded-3xl border border-[var(--tx)]/10 bg-[var(--card)] transition-shadow hover:shadow-xl">
-        <div className="aspect-[4/3] overflow-hidden bg-neutral-100">{c.image_url?<img src={c.image_url} alt={c.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>:<div className="grid h-full place-items-center text-[var(--tx)]/15"><Award size={56}/></div>}</div>
+        <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">{c.image_url&&isPdf(c.image_url)?<><div className="h-full w-full overflow-hidden bg-white"><PdfView url={c.image_url} thumb title={c.title}/></div><span className="absolute right-3 top-3 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white">PDF</span></>:c.image_url?<img src={c.image_url} alt={c.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>:<div className="grid h-full place-items-center text-[var(--tx)]/15"><Award size={56}/></div>}</div>
         <div className="p-6"><div className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-[var(--ac)]"><span>{c.issuer}</span><span className="font-normal normal-case text-[var(--tx)]/45">{c.issued_at}</span></div>
           <h3 className="font-display mt-2 text-lg font-semibold leading-snug">{c.title}</h3>{c.description&&<p className="mt-2 line-clamp-3 text-sm text-[var(--tx)]/65">{c.description}</p>}</div></motion.article></Reveal>)}</div>
-    <AnimatePresence>{open&&<Detail key={open.id} kicker={open.issuer} title={open.title} meta={open.issued_at} desc={open.description} images={[open.image_url].filter(Boolean)} links={[open.credential_url&&{h:open.credential_url,l:'Verify credential',I:ExternalLink}].filter(Boolean)} onClose={()=>setOpen(null)}/>}</AnimatePresence>
+    <AnimatePresence>{open&&<Detail key={open.id} kicker={open.issuer} title={open.title} meta={open.issued_at} desc={open.description} images={open.image_url&&!isPdf(open.image_url)?[open.image_url]:[]} pdf={open.image_url&&isPdf(open.image_url)?open.image_url:null} links={[open.image_url&&isPdf(open.image_url)&&{h:open.image_url,l:'Open / download PDF',I:FileText},open.credential_url&&{h:open.credential_url,l:'Verify credential',I:ExternalLink}].filter(Boolean)} onClose={()=>setOpen(null)}/>}</AnimatePresence>
   </Section>)
 }
 

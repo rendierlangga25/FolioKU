@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {Link,NavLink,Outlet,useLocation,useNavigate} from 'react-router-dom'
-import {Award,Briefcase,CreditCard,FileText,FolderKanban,GraduationCap,LayoutDashboard,Link2,LogOut,Mail,Menu,Phone,Settings,User,Wrench,X,ExternalLink,Lock,Shield,Tags,Receipt,Users,Megaphone,BarChart3,Wallet} from 'lucide-react'
+import {Award,Briefcase,CreditCard,FileText,FolderKanban,GraduationCap,LayoutDashboard,Link2,LogOut,Mail,Menu,Phone,Settings,User,Wrench,X,ExternalLink,Lock,Shield,Tags,Receipt,Users,Megaphone,BarChart3,Wallet,MessageSquare} from 'lucide-react'
 import {useAccount} from '../lib/account'
 import {usePlans} from '../lib/plans'
 import {daysLeft,dt} from '../lib/format'
 const USER=[['/app','Dashboard',LayoutDashboard],['/app/billing','Langganan',CreditCard],['/app/profile','Profile',User],['/app/about','About',FileText],['/app/experience','Experience',Briefcase],['/app/projects','Projects',FolderKanban],['/app/certificates','Certificates',Award],['/app/skills','Skills',Wrench],['/app/education','Education',GraduationCap],['/app/contact','Contact',Phone],['/app/social','Social Links',Link2],['/app/settings','Site Settings',Settings],['/app/messages','Messages',Mail]]
-const OWNER=[['/owner','Ringkasan',BarChart3],['/owner/plans','Paket & Harga',Tags],['/owner/orders','Pesanan',Receipt],['/owner/methods','Metode Pembayaran',Wallet],['/owner/users','Pelanggan',Users],['/owner/settings','Pengaturan Landing',Megaphone]]
+const OWNER=[['/owner','Ringkasan',BarChart3],['/owner/plans','Paket & Harga',Tags],['/owner/orders','Pesanan',Receipt],['/owner/methods','Metode Pembayaran',Wallet],['/owner/users','Pelanggan',Users],['/owner/feedback','Saran & Masukan',MessageSquare],['/owner/settings','Pengaturan Landing',Megaphone]]
 const FREE=['/app','/app/billing','/app/messages']
 export default function AppLayout({owner=false}){
   const [open,setOpen]=useState(false),nav=useNavigate(),loc=useLocation(),a=useAccount(),{app}=usePlans()
