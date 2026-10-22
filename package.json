@@ -1,27 +1,27 @@
 {
- "name": "portofolio-saas",
- "private": true,
- "version": "2.0.0",
- "type": "module",
- "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
- },
- "dependencies": {
-  "@supabase/supabase-js": "^2.45.4",
-  "framer-motion": "^11.11.17",
-  "lucide-react": "^0.460.0",
-  "pdfjs-dist": "^4.10.38",
-  "qrcode": "^1.5.4",
-  "react": "^18.3.1",
-  "react-dom": "^18.3.1",
-  "react-router-dom": "^6.28.0"
- },
- "devDependencies": {
-  "@tailwindcss/vite": "^4.0.0",
-  "@vitejs/plugin-react": "^4.3.4",
-  "tailwindcss": "^4.0.0",
-  "vite": "^6.0.0"
- }
+  "name": "raxer-erp",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:calc": "node src/lib/calc.test.mjs",
+    "test:lib": "node src/lib/imageCrop.test.mjs",
+    "test": "npm run test:calc && npm run test:lib && node src/lib/tableCols.test.mjs && node src/lib/rank.test.mjs && node src/lib/logisticStats.test.mjs && node src/lib/exportXlsx.test.mjs && node src/lib/storageUsage.test.mjs && node src/lib/reportExport.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "exceljs": "^4.4.0",
+    "jszip": "^3.10.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
+    "tesseract.js": "^5.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0"
+  }
 }
