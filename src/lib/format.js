@@ -1,68 +1,12 @@
-export const rp = (n) => 'Rp ' + Math.round(+n || 0).toLocaleString('id-ID');
-export const num = (n, d = 2) =>
-  (+n || 0).toLocaleString('id-ID', { minimumFractionDigits: d, maximumFractionDigits: d });
-export const int = (n) => Math.round(+n || 0).toLocaleString('id-ID');
-
-const TZ = 'Asia/Jakarta';
-export const todayISO = () => new Intl.DateTimeFormat('sv-SE', { timeZone: TZ }).format(new Date());
-export const monthISO = () => todayISO().slice(0, 7);
-
-export const fmtDate = (iso) =>
-  iso
-    ? new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(
-        new Date(iso + 'T00:00:00Z')
-      )
-    : '';
-export const fmtLongDate = (d = new Date()) =>
-  new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: TZ }).format(d);
-export const fmtClock = (d = new Date()) =>
-  new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: TZ })
-    .format(d)
-    .replace(/\./g, ':');
-
-export const monthRange = (ym) => {
-  const [y, m] = ym.split('-').map(Number);
-  const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
-  return { from: `${ym}-01`, to: `${ym}-${String(last).padStart(2, '0')}` };
-};
-
-/** Rentang tanggal bawaan = satu bulan berjalan. */
-export const thisMonthRange = () => monthRange(monthISO());
-export const rangeLabel = (r) => (r.from === r.to ? fmtDate(r.from) : `${fmtDate(r.from)} – ${fmtDate(r.to)}`);
-export const rangeSlug = (r) => `${r.from}_${r.to}`;
-
-export const csvDownload = (filename, rows) => {
-  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const body = '﻿' + rows.map((r) => r.map(esc).join(',')).join('\n');
-  const url = URL.createObjectURL(new Blob([body], { type: 'text/csv;charset=utf-8' }));
-  const a = Object.assign(document.createElement('a'), { href: url, download: filename });
-  a.click();
-  URL.revokeObjectURL(url);
-};
-
-/** Perkecil foto (maks 1280px, JPEG) agar hemat storage & OCR cepat. */
-export function compressImage(file, max = 1280, quality = 0.82) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      const s = Math.min(1, max / Math.max(img.width, img.height));
-      const c = document.createElement('canvas');
-      c.width = Math.round(img.width * s);
-      c.height = Math.round(img.height * s);
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url);
-      c.toBlob((b) => (b ? resolve(b) : reject(new Error('Gagal memproses foto'))), 'image/jpeg', quality);
-    };
-    img.onerror = () => reject(new Error('File bukan gambar yang valid'));
-    img.src = url;
-  });
-}
-
-export const blobToDataURL = (blob) =>
-  new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(blob);
-  });
+export const rp=n=>'Rp\u00a0'+new Intl.NumberFormat('id-ID').format(Math.round(Number(n)||0))
+export const dur=p=>p.duration_months==null?'Selamanya':p.duration_months%12===0?`${p.duration_months/12} tahun`:`${p.duration_months} bulan`
+export const perMonth=p=>p.duration_months?Math.round(p.price/p.duration_months):null
+export const disc=p=>p.original_price&&p.original_price>p.price?Math.round((1-p.price/p.original_price)*100):0
+export const dt=d=>d?new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-'
+export const daysLeft=d=>Math.max(0,Math.ceil((new Date(d)-new Date())/864e5))
+export const waLink=(n,t='Halo, saya mau tanya soal langganan')=>n?`https://wa.me/${String(n).replace(/\D/g,'')}?text=${encodeURIComponent(t)}`:''
+export const rpShort=n=>{n=Number(n)||0;const a=Math.abs(n),f=(v,u)=>(Math.round(v*10)/10).toString().replace('.',',')+' '+u;return a>=1e9?f(n/1e9,'M'):a>=1e6?f(n/1e6,'jt'):a>=1e3?f(n/1e3,'rb'):String(Math.round(n))}
+export const parseDay=s=>new Date(String(s).slice(0,10)+'T00:00:00')
+export const dayLabel=s=>parseDay(s).toLocaleDateString('id-ID',{day:'numeric',month:'short'})
+export const monthLabel=s=>parseDay(s).toLocaleDateString('id-ID',{month:'short',year:'2-digit'})
+export const dtTime=d=>d?new Date(d).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'-'
