@@ -932,3 +932,26 @@ label { text-transform: uppercase; letter-spacing: .04em; font-size: 12px; }
   .li-row.drv-row > input { flex: 1 1 100%; }
   .li-row.drv-row .switch { margin-left: auto; }
 }
+
+/* ── revisi 22: form INPUT driver & LOADING DOCK menyesuaikan lebar layar (zoom in / out) ──
+   Lebar form mengikuti area konten (tidak lagi dikunci 860px). Makin lebar layar / makin kecil zoom,
+   kartu otomatis tersusun 2–3 kolom; makin sempit / zoom in, kembali 1 kolom. */
+.tripform { max-width: none; width: 100%; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); align-items: start; }
+.tripform > .err-box, .tripform > .progress-card, .tripform > .form-actions, .tripform > .note, .tripform > .card.docs { grid-column: 1 / -1; }
+.tripform > .card { min-width: 0; }
+.drafts { max-width: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+@media (min-width: 761px) { .tripform .form-actions { justify-content: flex-end; } }
+
+/* ── revisi 23: BERSIHKAN DATABASE ── */
+.clean { display: grid; gap: 14px; } .clean > * { min-width: 0; } .clean .card-t small { font-size: 11px; margin-left: 8px; }
+.clean-kinds { display: grid; gap: 8px; }
+.clean-kind { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; }
+.clean-kind.on { border-color: var(--accent); background: var(--accent-bg); } .clean-kind.dg.on { border-color: #dc2626; background: #fdecec; }
+.clean-kind span { display: grid; gap: 2px; } .clean-kind small { color: var(--muted); font-size: 12.5px; } .clean-kind input { margin-top: 4px; }
+.clean-date { display: grid; grid-template-columns: minmax(0, 260px) 1fr; gap: 10px 16px; align-items: end; }
+.clean-presets { display: flex; gap: 6px; flex-wrap: wrap; } .clean-presets .on { border-color: var(--accent); color: var(--accent-d); }
+.clean-plan { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; } .clean-plan.dg { border-color: #ef9a9a; background: #fff8f8; }
+.clean-plan h4, .clean-log h4 { margin: 0; font-size: 14px; } .clean-plan ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.clean-word { display: grid; gap: 4px; max-width: 280px; }
+.clean-log ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; } .clean-log li { display: flex; gap: 6px 12px; flex-wrap: wrap; font-size: 13.5px; padding: 6px 10px; background: var(--line-2, #f4f4f4); border-radius: 8px; }
+@media (max-width: 760px) { .clean-date { grid-template-columns: 1fr; } }

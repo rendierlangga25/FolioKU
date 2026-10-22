@@ -10,6 +10,7 @@ import { buildBackupZip, buildReportWorkbook, downloadBlob, xlsxBlob } from '../
 import { MB, planDockPhotos, planTripPhotos, runPhotoZip, sanitize, summarizePlan } from '../lib/photoZip.js';
 import { PageHead, Toast, useToast } from '../components/ui.jsx';
 import StoragePanel from '../components/StoragePanel.jsx';
+import CleanupPanel from '../components/CleanupPanel.jsx';
 
 const BACKUP_TABLES = ['profiles', 'drivers', 'vehicles', 'fuel_prices', 'destinations', 'trips', 'dock_options', 'dock_uploads', 'app_settings'];
 const DATE_TYPES = [['semua', 'Semua data'], ['tahunan', 'Tahunan'], ['bulanan', 'Bulanan'], ['rentang', 'Rentang tanggal']];
@@ -234,6 +235,7 @@ export default function ReportLogistic() {
       </section>
 
       <StoragePanel {...storage} say={say} />
+      <CleanupPanel say={say} onDone={storage.reload} />
       <Toast msg={toast.msg} kind={toast.kind} onDone={clear} />
     </>
   );

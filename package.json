@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test:calc": "node src/lib/calc.test.mjs",
     "test:lib": "node src/lib/imageCrop.test.mjs",
-    "test": "npm run test:calc && npm run test:lib && node src/lib/tableCols.test.mjs && node src/lib/rank.test.mjs && node src/lib/logisticStats.test.mjs && node src/lib/exportXlsx.test.mjs && node src/lib/storageUsage.test.mjs && node src/lib/reportExport.test.mjs"
+    "test": "npm run test:calc && npm run test:lib && node src/lib/tableCols.test.mjs && node src/lib/rank.test.mjs && node src/lib/logisticStats.test.mjs && node src/lib/exportXlsx.test.mjs && node src/lib/storageUsage.test.mjs && node src/lib/reportExport.test.mjs && node src/lib/cleanup.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

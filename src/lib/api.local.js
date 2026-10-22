@@ -276,6 +276,18 @@ export const api = {
     if (!path || !/^data:|^blob:|^https?:/.test(path)) throw new Error('Foto tidak tersedia');
     return (await fetch(path)).blob();
   },
+  // ── BERSIHKAN DATABASE (mode demo) ──
+  async cleanupRows(kind, before) { const db = load(); return (kind === 'dock' ? db.dock_uploads : db.trips).filter((r) => r.tanggal < before); },
+  async deletePhotos() { return { failed: [] }; },
+  async cleanupApply(kind, ids) {
+    const db = load(); const set = new Set(ids);
+    if (kind === 'dock') db.dock_uploads = db.dock_uploads.filter((r) => !set.has(r.id));
+    else if (kind === 'pengiriman') db.trips = db.trips.filter((r) => !set.has(r.id));
+    else db.trips.forEach((t) => { if (set.has(t.id)) Object.assign(t, { foto_path: null, foto_km_isi: null, foto_km_akhir: null, foto_sisa_bbm: null, foto_serah_terima: [], foto_surat_jalan: [], foto_kendala: [] }); });
+    save(db);
+  },
+  async logCleanup(e) { const db = load(); db.cleanup_log = [{ id: uid(), at: new Date().toISOString(), ...e }, ...(db.cleanup_log || [])]; save(db); },
+  async listCleanupLog() { return (load().cleanup_log || []).slice(0, 10); },
   /** Mode demo: ukuran dihitung dari data di browser (foto = data URL). */
   async storageUsage() {
     const db = load(); let photos = 0, bytes = 0;

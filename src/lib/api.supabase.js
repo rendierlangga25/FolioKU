@@ -228,6 +228,36 @@ export const api = {
     if (error) throw new Error(error.message || 'Foto tidak dapat diunduh');
     return data;
   },
+  // ── BERSIHKAN DATABASE (developer; dijaga RLS: hanya owner yang boleh ubah/hapus) ──
+  /** Baris lama yang akan dibersihkan: pengiriman (kind 'foto_pengiriman' | 'pengiriman') atau upload dock. */
+  async cleanupRows(kind, before) {
+    const table = kind === 'dock' ? 'dock_uploads' : 'trips';
+    return pageAll(() => supabase.from(table).select('*').lt('tanggal', before).order('tanggal').order('id'));
+  },
+  /** Hapus file foto dari bucket (per 100). failed = path yang gagal. */
+  async deletePhotos(paths, onProgress = () => {}) {
+    const failed = []; let done = 0;
+    for (let i = 0; i < paths.length; i += 100) {
+      const part = paths.slice(i, i + 100);
+      const { error } = await supabase.storage.from('km-photos').remove(part);
+      if (error) failed.push(...part);
+      done += part.length; onProgress(done);
+    }
+    return { failed };
+  },
+  async cleanupApply(kind, ids, onProgress = () => {}) {
+    const NONE = { foto_path: null, foto_km_isi: null, foto_km_akhir: null, foto_sisa_bbm: null, foto_serah_terima: [], foto_surat_jalan: [], foto_kendala: [] };
+    for (let i = 0; i < ids.length; i += 100) {
+      const part = ids.slice(i, i + 100);
+      const q = kind === 'dock' ? supabase.from('dock_uploads').delete().in('id', part)
+        : kind === 'pengiriman' ? supabase.from('trips').delete().in('id', part)
+        : supabase.from('trips').update(NONE).in('id', part);
+      const { error } = await q; if (error) throw new Error(error.message);
+      onProgress(Math.min(ids.length, i + 100));
+    }
+  },
+  async logCleanup(e) { ok(await supabase.from('cleanup_log').insert(e)); },
+  async listCleanupLog() { return ok(await supabase.from('cleanup_log').select('*').order('at', { ascending: false }).limit(10)); },
   /** Penggunaan database & penyimpanan foto (hanya developer/owner). */
   async storageUsage() { return ok(await supabase.rpc('storage_usage')); },
   async saveStorageLimits(l) { ok(await supabase.rpc('set_storage_limits', { p_db_mb: l.db_mb, p_storage_mb: l.storage_mb, p_warn: l.warn_pct, p_crit: l.crit_pct })); },

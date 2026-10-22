@@ -581,3 +581,21 @@ revoke all on function public.set_storage_limits(numeric, numeric, integer, inte
 grant execute on function public.set_storage_limits(numeric, numeric, integer, integer) to authenticated;
 
 notify pgrst, 'reload schema';
+
+
+-- ───────── REVISI 23 (instalasi baru: sudah termasuk di sini) ─────────
+create table if not exists public.cleanup_log (
+  id uuid primary key default gen_random_uuid(),
+  at timestamptz not null default now(),
+  by_user uuid default auth.uid() references auth.users(id) on delete set null,
+  by_name text,
+  kind text not null,
+  before_date date not null,
+  rows integer not null default 0,
+  photos integer not null default 0
+);
+alter table public.cleanup_log enable row level security;
+drop policy if exists cleanup_log_owner on public.cleanup_log;
+create policy cleanup_log_owner on public.cleanup_log for all to authenticated
+  using (public.is_owner()) with check (public.is_owner());
+notify pgrst, 'reload schema';
